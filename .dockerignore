@@ -1,0 +1,7 @@
+.idea/
+.git/
+node_modules
+public
+*.log
+.DS_Store
+bin

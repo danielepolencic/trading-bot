@@ -1,0 +1,42 @@
+version: '2'
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: ./build/App.Dockerfile
+    image: "forex:$BUILD_ID"
+    ports:
+      - "4000:4000"
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis://redis
+      NODE_ENV: ${NODE_ENV}
+      ACCOUNTS_CURRENCY_FAIR: ${ACCOUNTS_CURRENCY_FAIR}
+      QUOTES_CURRENCY_FAIR_PROFILE: ${QUOTES_CURRENCY_FAIR_PROFILE}
+      OANDA_PROFILE: ${OANDA_PROFILE}
+      IMGUR_PROFILE: ${IMGUR_PROFILE}
+      VIRTUAL_HOST: "forex-${NODE_ENV}.uasabici.com"
+
+  redis:
+    image: redis:3.2.5-alpine
+    volumes:
+      - /tmp/redis:/data
+
+  redis-commander:
+    build:
+      context: .
+      dockerfile: ./build/RedisCommander.Dockerfile
+    depends_on:
+      - redis
+    ports:
+      - "4567:8080"
+    environment:
+      REDIS_HOST: redis
+      VIRTUAL_HOST: "redis.forex-${NODE_ENV}.uasabici.com"
+
+networks:
+  default:
+    external:
+      name: nginx-proxy

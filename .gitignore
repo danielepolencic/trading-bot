@@ -1,0 +1,9 @@
+node_modules/
+bin/
+.vscode/
+typings/
+cookies/
+.idea/
+public/
+database/
+ts-node/
